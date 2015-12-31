@@ -1,0 +1,7 @@
+import scrapy
+
+def startUrls():
+    urls = []
+    urls.append("https://www.reddit.com/r/music")
+    urls.append("https://www.reddit.com/r/gaming")
+    return urls

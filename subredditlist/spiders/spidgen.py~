@@ -1,0 +1,7 @@
+from baseSpider import baseSpider
+
+def spidgen():
+    listofurl = ["https://www.reddit.com/r/gaming", "https://www.reddit.com/r/music"]
+    for url in listofurl:
+	currspider = baseSpider(spide, 'reddit.com', [url])
+

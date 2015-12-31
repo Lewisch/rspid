@@ -1,0 +1,37 @@
+import scrapy
+from scrapy.selector import Selector
+from subredditlist.items import redditItems
+from subredditlist.start import startUrls
+
+class subredditlist_spider(scrapy.Spider):
+	
+	name = "reddit"
+	allowed_domains = ["reddit.com"]
+	start_urls = startUrls()
+        print start_urls
+	print "Crawling..." + name;
+
+	def parse(self, response):
+		print "Extraction and Parsing Initiated!"
+		redditPosts = Selector(response).xpath('//div[@id="siteTable"]')
+		items = []
+		i = 1
+		for post in redditPosts:
+			# extracting post titles, links, ratings
+			item = redditItems()
+			print post.xpath('div/div[2]/p[1]/a/text()').extract()
+			print i
+			item['postTitle'] = post.xpath('div/div[2]/p[1]/a/text()').extract()
+			item['postLink'] = post.xpath('div/div[2]/p[1]/a/@href').extract()
+			item['postUpvote'] = post.xpath('div/div[1]/div[3]/text()').extract()
+			item['commentLink'] = post.xpath('div/div[2]//ul/li[1]/a/@href').extract()
+			item['rankingPosition'] = i
+			item['lastUpdate'] = post.xpath('div/div[2]/p[2]/time/@datetime').extract()
+			item['postOrigin'] = post.xpath('div/div[2]/p[2]/a/text()').extract()
+			items.append(item)
+			i += 1			
+
+		return items
+
+
+		
