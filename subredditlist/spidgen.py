@@ -10,8 +10,8 @@ from scrapy.crawler import CrawlerProcess
 from spiders.baseSpider import baseSpider
 from scrapy.utils.project import get_project_settings
 
-#Write start_urls and allowed_domains as strings with items separated by commas
+#Adjust start_urls and allowed_domains as desired
 
 process = CrawlerProcess(get_project_settings())
-process.crawl(baseSpider, start_urls="https://www.reddit.com/r/gaming", allowed_domains="reddit.com")
+process.crawl(baseSpider, start_urls=["https://www.reddit.com/r/gaming"], allowed_domains=["reddit.com"])
 process.start()
