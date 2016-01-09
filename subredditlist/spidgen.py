@@ -10,6 +10,7 @@ from scrapy.crawler import CrawlerProcess
 from spiders.baseSpider import baseSpider
 from scrapy.utils.project import get_project_settings
 
+
 #Adjust start_urls and allowed_domains as desired
 
 process = CrawlerProcess(get_project_settings())
