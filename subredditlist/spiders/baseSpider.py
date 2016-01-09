@@ -7,9 +7,14 @@ from scrapy.spiders import CrawlSpider
 
 class baseSpider(CrawlSpider):
 	name="redditSpider"
-        def __init__(self, allowed_domains=[], start_urls=[]):
+        
+	def __init__(self, **kw):
+	    super(baseSpider, self).__init__(**kw)
+	    start_urls = [kw.get('start_urls')]
+	    allowed_domains = [kw.get('allowed_domains')]
             self.allowed_domains = allowed_domains
             self.start_urls = start_urls
+
 	print "Crawling...";
 
 	def parse(self, response):
