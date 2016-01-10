@@ -16,7 +16,7 @@ NEWSPIDER_MODULE = 'subredditlist.spiders'
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-#USER_AGENT = 'subredditlist (+http://www.yourdomain.com)'
+USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.1'
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 CONCURRENT_REQUESTS=4
@@ -62,7 +62,7 @@ DEFAULT_REQUEST_HEADERS = {
 # Configure item pipelines
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
 #ITEM_PIPELINES = {
-#    'subredditlist.pipelines.SomePipeline': 300,
+#    'subredditlist.pipelines.mongodbpipeline': 300,
 #}
 
 # Enable and configure the AutoThrottle extension (disabled by default)
