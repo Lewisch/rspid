@@ -2,12 +2,12 @@ import sys
 import scrapy
 from scrapy.crawler import CrawlerProcess
 from scrapy.selector import Selector
-from subredditlist.items import redditItems
+from items import redditItems
 from scrapy.spiders import CrawlSpider
 
 class baseSpider(CrawlSpider):
 	name="redditSpider"
-        
+
 	def __init__(self, **kw):
 	    super(baseSpider, self).__init__(**kw)
 	    start_urls = kw.get('start_urls')
@@ -31,4 +31,5 @@ class baseSpider(CrawlSpider):
 			item['lastUpdate'] = post.xpath('div/div[2]/p[2]/time/@datetime').extract()
 			item['postOrigin'] = post.xpath('div/div[2]/p[2]/a/text()').extract()
 			items.append(item)
-        return items
+
+		return items
