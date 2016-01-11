@@ -7,19 +7,22 @@
 
 #Taken directly from https://github.com/zbef3825/scraPYwithDatabase/
 
-import pymongo
+import httplib
+import requests
+import ast
 
-class mongodbpipeline(object):
+class httpreqpipeline(object):
 
 
 	def __init__(self):
 
-		connection = pymongo.MongoClient('mongodb://localhost:27017/')
-		db = connection['REDDIT_DATABASE']
-		self.collection = db.posts
-		print "MongoDB Pipeline Initiated!"
+		r1 = requests.post('https://calm-springs-9697.herokuapp.com/login', auth=('USERNAME', 'PASSWORD'))
+		tokendict = ast.literal_eval(r1.text)
+		token = tokendict['token']
+		headers = {'Content-Type': 'application/json', 'Authorization': token}
+		print "Pipeline Initiated!"
 
-	def process_item(self, item, spider):
+	def process_items(self, items, spider):
 		print "Reorganizing json files..."
 		post_num = {}
 		postcount = 0
@@ -27,9 +30,10 @@ class mongodbpipeline(object):
 		key_count = 0
 		#add postnumber index
 
-		for value in item['post_title']:
-
+		for value in items['post_title']:
 			
+			if requests.get('https://calm-springs-9697.herokuapp.com/database/reddit').text.startswith('Unauthorized'):
+				pass
 			if postcount == 0:
 				pass
 			else:
@@ -38,15 +42,16 @@ class mongodbpipeline(object):
 			postcount += 1
 			post_num['post'+str(postcount)] = {}
 
-			for key in item:
-				post_num['post'+str(postcount)][key] = item[key][value_count]
+			for key in items:
+				post_num['post'+str(postcount)][key] = items[key][value_count]
 
 
 
 			value_count += 1
-			self.collection.insert(dict(post_num))
+			post_request = requests.post('https://calm-springs-9697.herokuapp.com/database/reddit', data = dict(post_num), headers=headers)
+			post_request
 
-		print "Saving jsons to MongoDB"
+		print "Saving jsons to database"
 
 		
 		
