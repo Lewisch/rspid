@@ -27,9 +27,7 @@ class baseSpider(CrawlSpider):
             item['postLink'] = post.xpath('div/div[2]/p[1]/a/@href').extract()
             item['postUpvote'] = post.xpath('div/div[1]/div[3]/text()').extract()
             item['commentLink'] = post.xpath('div/div[2]//ul/li[1]/a/@href').extract()
-            item['rankingPosition'] = str(0)
-            item['lastUpdate'] = post.xpath('div/div[2]/p[2]/time/@datetime').extract()
-            item['postOrigin'] = post.xpath('div/div[2]/p[2]/a/text()').extract()
+            item['postOrigin'] = response.xpath('//body/div[1]/div[2]/span/a/text()').extract()
             items.append(item)
 
         return items
