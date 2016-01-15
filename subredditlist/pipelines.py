@@ -11,6 +11,7 @@ import httplib
 import requests
 import ast
 import json
+import copy
 
 class httpreqpipeline(object):
 
@@ -43,14 +44,16 @@ class httpreqpipeline(object):
 			post_col = []
 			postnum = len(items["postLink"])
 			for num in range(postnum):
-				post_col.append(post)
+				post_col.append(copy.deepcopy(post))
 			print "Reorganizing json files..."
 			#add postnumber index
 			for key, value in items.iteritems():
 				for num in range(postnum):
-					post_col[num][key] = value[num]
+					if key == "subcategory":
+						post_col[num][key] = value[0]
+					else:
+						post_col[num][key] = value[num]
 				
-			
 			r2 = requests.post('https://calm-springs-9697.herokuapp.com/api/save/reddit', data = json.dumps(post_col), headers=self.headers)
 			if r2.status_code != 200:
 				print "Failed to save"
