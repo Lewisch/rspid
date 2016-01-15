@@ -15,4 +15,5 @@ class redditItems(scrapy.Item):
 	commentLink = scrapy.Field()
 	rankingPosition = scrapy.Field()
 	lastUpdate = scrapy.Field()
+	subcategory = scrapy.Field()
 	postOrigin = scrapy.Field()
