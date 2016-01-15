@@ -7,50 +7,60 @@
 
 #Taken directly from https://github.com/zbef3825/scraPYwithDatabase/
 
-import pymongo
+import httplib
+import requests
+import ast
+import json
 
-class mongodbpipeline(object):
-
+class httpreqpipeline(object):
 
 	def __init__(self):
+		#Logging in with scrapy info
+		r1 = requests.post('https://calm-springs-9697.herokuapp.com/login', json = {"userID":"scrapy", "password":"cheesecake"})
+		
+		#if failed to logging in, set allowed variable as false and print what went wrong
+		if r1.status_code != 200:
+			self.allowed = False
+			print r1.text
+		
+		#if logged in sucessfully, save token in token variable and get it as header
+		else:
+			self.allowed = True
+			tokendict = ast.literal_eval(r1.text)
+			token = tokendict['token']
+			self.headers = {'Content-Type': 'application/json', 'Authorization': "bearer " + token}
+			print "Pipeline Initiated!"
 
-		connection = pymongo.MongoClient('mongodb://localhost:27017/')
-		db = connection['REDDIT_DATABASE']
-		self.collection = db.posts
-		print "MongoDB Pipeline Initiated!"
+	def process_item(self, items, spider):
+		
+		#if we cannot log in we pass this condition and nothing happens
+		if self.allowed == False:
+			pass
 
-	def process_item(self, item, spider):
-		print "Reorganizing json files..."
-		post_num = {}
-		postcount = 0
-		value_count = 0
-		key_count = 0
-		#add postnumber index
-
-		for value in item['post_title']:
-
+		#after successfully logging in, sort data into individual web post and save it to the database
+		else:
+			post = {}
+			post_col = []
+			postnum = len(items["postLink"])
+			for num in range(postnum):
+				post_col.append(post)
+			print "Reorganizing json files..."
+			#add postnumber index
+			for key, value in items.iteritems():
+				for num in range(postnum):
+					post_col[num][key] = value[num]
+				
 			
-			if postcount == 0:
-				pass
+			r2 = requests.post('https://calm-springs-9697.herokuapp.com/api/save/reddit', data = json.dumps(post_col), headers=self.headers)
+			if r2.status_code != 200:
+				print "Failed to save"
 			else:
-				post_num.pop('post'+str(postcount), None)
-
-			postcount += 1
-			post_num['post'+str(postcount)] = {}
-
-			for key in item:
-				post_num['post'+str(postcount)][key] = item[key][value_count]
-
-
-
-			value_count += 1
-			self.collection.insert(dict(post_num))
-
-		print "Saving jsons to MongoDB"
+				print "Saving jsons to database"
 
 		
 		
 
 
 		
-		return post_num
+		return items
+	
