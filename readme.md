@@ -7,6 +7,7 @@
 
 #To do
 <ul>
+<li>NLP integration</li>
 <li>Multiple scrapy from other source than reddit</li>
 <li>IP changes</li>
 </ul>
